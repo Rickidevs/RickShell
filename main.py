@@ -3,7 +3,11 @@ import os
 import random
 import subprocess
 import socket
-from colorama import Fore, Style
+from colorama import Fore, Style, init
+import sys
+
+# Renk ve stil başlatma
+init(autoreset=True)
 
 def read_template(file_path):
     with open(file_path, 'r') as file:
@@ -19,13 +23,26 @@ def generate_shell(template_path, ip, port):
         print(Fore.RED + Style.BRIGHT + f"ERROR: An unexpected error occurred: {e}" + Style.RESET_ALL)
 
 def print_shell_command(title, shell_code):
-    border = "=+" * (len(title) - 10)
+    # Başlık ve sınır genişliği ayarları
+    border_length = max(len(title), max(len(line) for line in shell_code.split('\n'))) + 4
+    border = "+" + "-" * border_length + "+"
+    title_line = f"| {title.center(border_length - 2)} |"
+    shell_border = "+" + "-" * border_length + "+"
+
     print("")
     print(Fore.CYAN + Style.BRIGHT + border + Style.RESET_ALL)
-    print(Fore.CYAN + Style.BRIGHT + title + Style.RESET_ALL)
+    print(Fore.CYAN + Style.BRIGHT + title_line + Style.RESET_ALL)
     print(Fore.CYAN + Style.BRIGHT + border + Style.RESET_ALL)
     print("")
-    print(Fore.GREEN + shell_code + Style.RESET_ALL)
+
+    # Shell komutları için kutu
+    print(Fore.GREEN + Style.BRIGHT + shell_border)
+    shell_lines = shell_code.split('\n')
+    for line in shell_lines:
+        # Her komutu sınır içine sığdırmak için hizalama
+        print(Fore.GREEN + Style.BRIGHT + f"| {line.ljust(border_length - 2)} |")
+    print(Fore.GREEN + Style.BRIGHT + shell_border)
+    print("")
 
 def get_local_ip():
     try:
@@ -51,7 +68,7 @@ def validate_ip(ip):
 def print_most_used_commands(ip, port):
     try:
         commands = read_template('MostUsed.txt').format(ip=ip, port=port)
-        title = "   Most Used Reverse Shell Commands"
+        title = "Most Used Reverse Shell Commands"
         print_shell_command(title, commands)
     except FileNotFoundError:
         print(Fore.RED + Style.BRIGHT + "ERROR: 'MostUsed.txt' file not found." + Style.RESET_ALL)
@@ -73,13 +90,34 @@ def generate_sequential_port():
             return port
     return None
 
+def custom_help_message():
+    help_message = """
+    Usage: script.py [options]
+
+    Options:
+      -h, --help        Show this help message and exit
+      -p, --platform    Platform for the reverse shell (e.g., php, nc, python, bash, perl).
+      -ip               IP address for the reverse shell connection.
+      --port            Port for the reverse shell connection.
+
+    Description:
+      RickShell - A tool to generate reverse shells for educational purposes.
+    """
+    print(help_message)
+    sys.exit()
+
 def main():
-    parser = argparse.ArgumentParser(description='RickShell - A tool to generate reverse shells for educational purposes.')
+    parser = argparse.ArgumentParser(add_help=False, description='RickShell - A tool to generate reverse shells for educational purposes.')
+
+    parser.add_argument('-h', '--help', action='store_true', help='Show help message and exit')
     parser.add_argument('-p', '--platform', type=str, help='Platform for the reverse shell (e.g., php, nc, python, bash, perl).')
     parser.add_argument('-ip', type=str, help='IP address for the reverse shell connection.')
     parser.add_argument('--port', type=int, help='Port for the reverse shell connection.')
 
     args = parser.parse_args()
+
+    if args.help:
+        custom_help_message()
 
     ip = args.ip if args.ip else get_local_ip()
     port = args.port if args.port else generate_sequential_port()
@@ -109,7 +147,7 @@ def main():
             template_path = platforms[platform]
             shell_code = generate_shell(template_path, ip, port)
             if shell_code:
-                title = f"   {platform.capitalize()} Reverse Shell Command"
+                title = f"{platform.capitalize()} Reverse Shell Command"
                 print_shell_command(title, shell_code)
         else:
             print(Fore.RED + Style.BRIGHT + "Unsupported platform. Supported platforms are: php, nc, netcat, python, bash, perl, java, nodejs, powershell, ruby, telnet." + Style.RESET_ALL)
