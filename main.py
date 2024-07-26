@@ -119,7 +119,7 @@ def custom_help_message():
     help_message = f"""
      Usage: RickShell [options]
 
-      {Fore.YELLOW}More: github.com/rickidevs/RickShel{Fore.RESET}
+      {Fore.YELLOW}More: github.com/Rickidevs/RickShell{Fore.RESET}
                  
       -h                Show this help message and exit
       -p,               Platform for the reverse shell (e.g., php, nc, python, bash, perl).
