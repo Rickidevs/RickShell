@@ -88,7 +88,7 @@ def validate_ip(ip):
     return True
 
 def print_most_used_commands(ip, port, ue_option):
-    commands = read_template('Shell/MostUsed.txt')
+    commands = read_template('/opt/RickShell/Shell/MostUsed.txt')
     if commands is None:
         return
     try:
@@ -158,15 +158,15 @@ def main():
 
     if args.platform:
         platforms = {
-            'php': 'Shell/php.txt',
-            'nc': 'Shell/netcat.txt',
-            'netcat': 'Shell/netcat.txt',
-            'python': 'Shell/python.txt',
-            'bash': 'Shell/bash.txt',
-            'java': 'Shell/java.txt',
-            'powershell': 'Shell/powershell.txt',
-            'ruby': 'Shell/ruby.txt',
-            'telnet': 'Shell/telnet.txt',
+            'php': '/opt/RickShell/Shell/php.txt',
+            'nc': '/opt/RickShell/Shell/netcat.txt',
+            'netcat': '/opt/RickShell/Shell/netcat.txt',
+            'python': '/opt/RickShell/Shell/python.txt',
+            'bash': '/opt/RickShell/Shell/bash.txt',
+            'java': '/opt/RickShell/Shell/java.txt',
+            'powershell': '/opt/RickShell/Shell/powershell.txt',
+            'ruby': '/opt/RickShell/Shell/ruby.txt',
+            'telnet': '/opt/RickShell/Shell/telnet.txt',
         }
 
         platform = args.platform.lower()
