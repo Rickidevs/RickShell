@@ -3,8 +3,8 @@
 
 
     ⠀⠀⠀⠐⣦⣴⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-    ⠀⠀⠀⣻⣿⣿⣿⡄⠀⠀⣿⠀⠀⠀Rules are for fools, Morty!⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-    ⠀⠀⠈⠹⣯⣿⣿⡃⠀⠀⡿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⣻⣿⣿⣿⡄⠀⠀⣿⠀⠀No shell, ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+    ⠀⠀⠈⠹⣯⣿⣿⡃⠀⠀⡿⠀⠀⠀⠀ no fun!⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
     ⠀⠀⠀⠀⢀⣹⣟⣡⡤⠴⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
     ⠀⠀⣠⡶⠋⢹⣿⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣶⣿⣿⡄⠀⠀⠀
     ⠀⣼⠃⠀⠀⢀⣿⣿⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⣿⣿⣿⣿⡀⠀⠀
@@ -14,7 +14,7 @@
     ⠀⠀⠀⠀⠀⠀⣼⠃⠀⠀⣰⠟⠀⢀⠀⠀⠀⢠⣿⣿⣁⠀⠀⠀⠀⠀⠀⠀
     ⠀⠀⠀⠀⢀⡼⠃⠀⠀⢴⣅⠀⠀⠉⠘⠲⠴⠟⠁⠈⠙⢷⡀⠀⠀⠀⠀⠀
     ⠀⠀⠀⣰⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠇⠀⠀⠀⠀⠀
-    ⠀⠀⠰⣇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠁⠀⠀⠀v1.3
+    ⠀⠀⠰⣇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠁⠀v1.3
 
 
 use one of the reverse shell commands in this tool to take ownership of the system when you find a vulnerability that you can exploit ;-)
@@ -27,7 +27,7 @@ use one of the reverse shell commands in this tool to take ownership of the syst
 
 - `RickShell -p netcat` *netcat reverse shell commands.*
 
-- `RickShell - p bash`   *bash reverse shell commands.*
+- `RickShell -p bash`   *bash reverse shell commands.*
 
 - `RickShell -p php` *php reverse shell commands.* 
 
