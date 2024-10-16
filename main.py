@@ -133,6 +133,25 @@ def custom_help_message():
     print(help_message)
     sys.exit()
 
+def get_vpn_ip():
+    try:
+        result = subprocess.run(['ip', 'addr'], capture_output=True, text=True)
+        interfaces = result.stdout.splitlines()
+        for line in interfaces:
+            # 'tun' veya 'tap' arayüzlerini arıyoruz
+            if 'tun' in line or 'tap' in line:
+                index = interfaces.index(line)
+                for subline in interfaces[index:]:
+                    if 'inet' in subline:
+                        ip = subline.split()[1].split('/')[0]
+                        return ip
+        print(Fore.RED + Style.BRIGHT + "ERROR: No VPN interface (tun/tap) found." + Style.RESET_ALL)
+        return None
+    except Exception as e:
+        print(Fore.RED + Style.BRIGHT + f"ERROR: Unable to retrieve VPN IP address: {e}" + Style.RESET_ALL)
+        return None
+
+
 def main():
     parser = argparse.ArgumentParser(add_help=False, description='RickShell - A tool to generate reverse shells for educational purposes.')
 
@@ -141,13 +160,21 @@ def main():
     parser.add_argument('-ip', type=str, help='IP address for the reverse shell connection.')
     parser.add_argument('--port', type=int, help='Port for the reverse shell connection.')
     parser.add_argument('-ue', action='store_true', help='Replace spaces with "+" in the shell code.')
+    parser.add_argument('-vpn', action='store_true', help='Use VPN (tun) interface for the reverse shell connection.')
 
     args = parser.parse_args()
 
     if args.help:
         custom_help_message()
 
-    ip = args.ip if args.ip else get_local_ip()
+    # VPN argümanı verildiyse VPN IP'sini al
+    if args.vpn:
+        ip = get_vpn_ip()
+        if ip is None:
+            return
+    else:
+        ip = args.ip if args.ip else get_local_ip()
+
     port = args.port if args.port else generate_sequential_port()
 
     if not validate_ip(ip):
