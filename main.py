@@ -125,6 +125,7 @@ def custom_help_message():
       -p,               Platform for the reverse shell (e.g., php, nc, python, bash, perl).
       -ip               IP address for the reverse shell connection.
       -ue               Replace spaces with "+" in the shell code.
+      -vpn              Use VPN (tun) interface for the reverse shell connection.
       --port            Port for the reverse shell connection.
 
       no arguments      the most used shell for you, also selects the most appropriate ip and port.
