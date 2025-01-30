@@ -5,6 +5,7 @@ import subprocess
 import socket
 from colorama import Fore, Style, init
 import sys
+import urllib.parse 
 
 init(autoreset=True)
 
@@ -32,10 +33,13 @@ def generate_shell(template_path, ip, port):
         print(Fore.RED + Style.BRIGHT + f"ERROR: An unexpected error occurred while generating the shell: {e}" + Style.RESET_ALL)
     return None
 
+
 def apply_ue_option(shell_code, ue_option):
     if ue_option:
-        return shell_code.replace(' ', '+')
+        encoded_shell_code = urllib.parse.quote(shell_code)
+        return encoded_shell_code.replace('%0A', '\n').replace('%0D', '\r')
     return shell_code
+
 
 def print_shell_command(title, shell_code, ue_option, border_needed):
     if shell_code is None:
@@ -124,7 +128,7 @@ def custom_help_message():
       -h                Show this help message and exit
       -p,               Platform for the reverse shell (e.g., php, nc, python, bash, perl).
       -ip               IP address for the reverse shell connection.
-      -ue               Replace spaces with "+" in the shell code.
+      -ue               Url encode shell commands.
       -vpn              Use VPN (tun) interface for the reverse shell connection.
       --port            Port for the reverse shell connection.
 
@@ -139,7 +143,6 @@ def get_vpn_ip():
         result = subprocess.run(['ip', 'addr'], capture_output=True, text=True)
         interfaces = result.stdout.splitlines()
         for line in interfaces:
-            # 'tun' veya 'tap' arayüzlerini arıyoruz
             if 'tun' in line or 'tap' in line:
                 index = interfaces.index(line)
                 for subline in interfaces[index:]:
@@ -160,7 +163,7 @@ def main():
     parser.add_argument('-p', '--platform', type=str, help='Platform for the reverse shell (e.g., php, nc, python, bash).')
     parser.add_argument('-ip', type=str, help='IP address for the reverse shell connection.')
     parser.add_argument('--port', type=int, help='Port for the reverse shell connection.')
-    parser.add_argument('-ue', action='store_true', help='Replace spaces with "+" in the shell code.')
+    parser.add_argument('-ue', action='store_true', help='url encode shell commands')
     parser.add_argument('-vpn', action='store_true', help='Use VPN (tun) interface for the reverse shell connection.')
 
     args = parser.parse_args()
@@ -168,7 +171,6 @@ def main():
     if args.help:
         custom_help_message()
 
-    # VPN argümanı verildiyse VPN IP'sini al
     if args.vpn:
         ip = get_vpn_ip()
         if ip is None:
