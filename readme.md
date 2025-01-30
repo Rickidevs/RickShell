@@ -72,5 +72,3 @@ _but if you want to use a different ip and port, you can use the following argum
 _you are fully responsible for legal or illegal use. remember that this tool is designed for education_
 
 ---
-
-✉️ Contact Me   - [Telegram](https://t.me/hackerrick)
