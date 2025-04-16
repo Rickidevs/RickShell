@@ -8,8 +8,9 @@ use one of the reverse shell commands in this tool to take ownership of the syst
 
 
 ## 📸 Screenshot
-![Screenshot](https://raw.githubusercontent.com/Rickidevs/RickShell/refs/heads/Main/screenshots/Screenshot1.png)
----
+<p>
+   <img src="https://raw.githubusercontent.com/Rickidevs/RickShell/refs/heads/Main/screenshots/Screenshot1.png" alt="RickPhis" width=550>
+ </p>
 
 ## 💡 HOW TO USE
 
