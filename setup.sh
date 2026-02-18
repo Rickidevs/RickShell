@@ -3,7 +3,7 @@
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-NC='\033[0m' 
+NC='\033[0m'
 
 
 echo "⠀⠀⠀⠀⠀⣠⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀"
@@ -60,7 +60,7 @@ fi
 sleep 1
 
 
-libraries=("colorama" "argparse")
+libraries=("psutil")
 
 for lib in "${libraries[@]}"; do
   python3 -c "import ${lib}" 2>/dev/null
@@ -68,7 +68,7 @@ for lib in "${libraries[@]}"; do
     echo -e "${lib} ${GREEN}library is installed.${NC} ✔"
   else
     echo -e "${lib} ${RED}library is not installed.${NC} ${YELLOW}Installing...${NC}"
-    pip3 install --user ${lib} &
+    pip3 install --break-system-packages ${lib} 2>/dev/null || pip3 install --user ${lib} &
     spinner
     echo -e "${lib} ${GREEN}library has been installed.${NC} ✔"
   fi
@@ -76,11 +76,11 @@ for lib in "${libraries[@]}"; do
 done
 
 
-files=("main.py" "Shell" "setup.sh")
+files=("rickshell.py" "core" "interface" "modules" "setup.sh")
 missing=false
 
 for file in "${files[@]}"; do
-  if [ ! -e $file ]; then
+  if [ ! -e "$file" ]; then
     echo -e "${file} ${RED}is missing.${NC} ✘"
     missing=true
   else
@@ -94,20 +94,24 @@ if $missing; then
   exit 1
 fi
 
+
 echo -e "${YELLOW}Transferring files to /opt/RickShell directory...${NC}"
 if [ ! -d "/opt/RickShell" ]; then
   sudo mkdir -p /opt/RickShell
 fi
 
-if [ -e "/opt/RickShell/main.py" ] && [ -e "/opt/RickShell/Shell" ] && [ -e "/opt/RickShell/setup.sh" ]; then
+if [ -e "/opt/RickShell/rickshell.py" ] && [ -d "/opt/RickShell/core" ] && [ -d "/opt/RickShell/interface" ] && [ -d "/opt/RickShell/modules" ]; then
   echo -e "Files already present in /opt/RickShell. ${GREEN}✔${NC}"
 else
-  sudo cp main.py /opt/RickShell/
-  sudo cp -r Shell /opt/RickShell/
+  sudo cp rickshell.py /opt/RickShell/
+  sudo cp -r core /opt/RickShell/
+  sudo cp -r interface /opt/RickShell/
+  sudo cp -r modules /opt/RickShell/
   sudo cp setup.sh /opt/RickShell/
   echo -e "Files transferred. ${GREEN}✔${NC}"
 fi
 sleep 1
+
 
 if ! grep -q "/opt/RickShell" /etc/profile; then
     echo -e "${YELLOW}Adding /opt/RickShell to PATH...${NC}"
@@ -119,14 +123,13 @@ else
 fi
 sleep 1
 
-echo -e "${YELLOW}Creating RickShell command...${NC}"
-sudo tee /usr/local/bin/RickShell > /dev/null <<EOL
+
+echo -e "${YELLOW}Creating rickshell command...${NC}"
+sudo tee /usr/local/bin/rickshell > /dev/null <<EOL
 #!/bin/bash
-python3 /opt/RickShell/main.py "\$@"
+python3 /opt/RickShell/rickshell.py "\$@"
 EOL
-sudo chmod +x /usr/local/bin/RickShell
-echo -e "RickShell command created. ${GREEN}✔${NC}"
+sudo chmod +x /usr/local/bin/rickshell
+echo -e "rickshell command created. ${GREEN}✔${NC}"
 
-echo -e "${GREEN}Installation complete. You can run the 'RickShell' command from anywhere.${NC}"
-
-
+echo -e "${GREEN}Installation complete. You can now run 'rickshell' from anywhere.${NC}"
