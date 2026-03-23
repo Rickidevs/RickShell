@@ -253,7 +253,10 @@ class ConsoleInterface(cmd.Cmd):
         except Exception:
             pass
 
+        SENTINEL = '__RICKSHELL_DONE__'
         stop_event = threading.Event()
+        output_ready = threading.Event()
+        output_ready.set()
 
         def _drain():
             buf = b''
@@ -269,15 +272,28 @@ class ConsoleInterface(cmd.Cmd):
                         )
                         sys.stdout.flush()
                         stop_event.set()
+                        output_ready.set()
                         break
                     buf += chunk
-                    if b'\n' in buf or b'\r' in buf or len(buf) > 512:
-                        for out_line in _clean_output(buf):
-                            sys.stdout.write(f"  {Colors.GREEN}{out_line}{Colors.ENDC}\r\n")
-                        sys.stdout.flush()
+                    if SENTINEL.encode() in buf:
+                        before = buf.split(SENTINEL.encode())[0]
+                        if before:
+                            for out_line in _clean_output(before):
+                                sys.stdout.write(f"  {Colors.GREEN}{out_line}{Colors.ENDC}\r\n")
+                            sys.stdout.flush()
                         buf = b''
+                        output_ready.set()  
+                    elif b'\n' in buf or b'\r' in buf or len(buf) > 1024:
+                        last_nl = max(buf.rfind(b'\n'), buf.rfind(b'\r'))
+                        if last_nl != -1:
+                            to_print = buf[:last_nl + 1]
+                            buf = buf[last_nl + 1:]
+                            for out_line in _clean_output(to_print):
+                                sys.stdout.write(f"  {Colors.GREEN}{out_line}{Colors.ENDC}\r\n")
+                            sys.stdout.flush()
                 except Exception:
                     stop_event.set()
+                    output_ready.set()
                     break
 
         drain_thread = threading.Thread(target=_drain, daemon=True)
@@ -291,13 +307,18 @@ class ConsoleInterface(cmd.Cmd):
 
         try:
             while not stop_event.is_set():
+                output_ready.wait()
+                if stop_event.is_set():
+                    break
+
                 try:
                     cmd = input(prompt)
                 except EOFError:
                     break
                 except KeyboardInterrupt:
                     print()
-                    break
+                    output_ready.set()
+                    continue
 
                 if not cmd.strip():
                     continue
@@ -307,15 +328,17 @@ class ConsoleInterface(cmd.Cmd):
 
                 try:
                     sock.setblocking(True)
-                    sock.sendall((cmd + '\n').encode())
+                    full_cmd = f"{cmd}\necho {SENTINEL}\n"
+                    sock.sendall(full_cmd.encode())
                     sock.setblocking(False)
-                    time.sleep(0.5)
+                    output_ready.clear()  
                 except OSError as exc:
                     print(Colors.error(f"[!] Send failed: {exc}"))
                     self.session_manager.remove_session(session_id)
                     break
         finally:
             stop_event.set()
+            output_ready.set()
             drain_thread.join(timeout=1.0)
             print(Colors.info("[*] Returning to main menu..."))
 
